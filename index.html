@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de CPF Válido</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h1 { color: #1a73e8; font-size: 1.5rem; }
+        #cpf-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e8f0fe;
+            border-radius: 8px;
+            color: #333;
+            min-height: 40px;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #1557b0; }
+        .footer { margin-top: 15px; font-size: 0.8rem; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gerador de CPF</h1>
+    <div id="cpf-display">---.---.------</div>
+    <button onclick="gerarCPF()">Gerar Novo CPF</button>
+    <p class="footer">Use apenas para fins de testes de software.</p>
+</div>
+
+<script>
+    function gerarCPF() {
+        const numAleatorio = () => Math.floor(Math.random() * 9);
+        
+        // Gera os 9 primeiros dígitos
+        let noveDigitos = Array.from({length: 9}, numAleatorio);
+
+        // Função para calcular os dígitos verificadores
+        const calcularDigito = (base) => {
+            let multiplicador = base.length + 1;
+            let soma = base.reduce((acc, curr) => acc + (curr * multiplicador--), 0);
+            let resto = (soma * 10) % 11;
+            return resto === 10 ? 0 : resto;
+        };
+
+        // Calcula o 1º dígito e adiciona ao array
+        const d1 = calcularDigito(noveDigitos);
+        noveDigitos.push(d1);
+
+        // Calcula o 2º dígito e adiciona ao array
+        const d2 = calcularDigito(noveDigitos);
+        noveDigitos.push(d2);
+
+        // Formatação: 000.000.000-00
+        const cpfFinal = noveDigitos.join('');
+        const cpfFormatado = cpfFinal.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+        document.getElementById('cpf-display').innerText = cpfFormatado;
+    }
+</script>
+
+</body>
+</html>
